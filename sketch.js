@@ -1,98 +1,62 @@
-let birdY, fallSpeed, gravity, pipePos, pipeSpeed, score, gapSize, gapHeight;
+let dot1, dot2, dot3;
 
 function setup() {
-  createCanvas(800, 600);
-  // birdY = 300;
-  // fallSpeed = -5;
-  // gravity = 0.1;
-  // score = 0;
-  // pipePos = width;
-
-  newGame();
+  createCanvas(windowWidth - 20, windowHeight - 20);
+  colorMode(HSL, 360, 100, 100);
+  dot1 = new BouncyDot();
+  dot2 = new BouncyDot();
+  dot3 = new BouncyDot();
 }
 
 function draw() {
-  background(220);
-  // add scoring
-  text("score: " + score, 50, 200);
-
-  ellipse(200, birdY, 50, 50);
-  birdY += fallSpeed;
-  fallSpeed += gravity;
-
-  // let the bird bounce off bottom
-  if (birdY + 25 > height) {
-    fallSpeed = -fallSpeed * 0.8;
-  }
-
-  // draw the moving pipe
-  // rect(pipePos, 0, 50, 250);
-  // rect(pipePos, 350, 50, height - 350);
-
-  rect(pipePos, 0, 50, gapHeight);
-  rect(pipePos, gapHeight + gapSize, 50, height - (gapHeight + gapSize));
-
-  pipePos += pipeSpeed;
-
-  if (pipePos < -50) {
-    score += 1;
-    pipePos = width;
-
-    // increase difficulty
-    pipeSpeed += -0.5;
-    gravity += 0.01;
-  }
-
-  // function takes seven paramters: rectX, rectY, rectWidth, rectHeight, circleX, circleY, circleDiameter
-  if (collideRectCircle(pipePos, 0, 50, gapHeight, 200, birdY, 50)) {
-    // score = 0
-    newGame();
-  }
-
-  if (
-    collideRectCircle(
-      pipePos,
-      350,
-      50,
-      height - gapHeight - gapSize,
-      200,
-      birdY,
-      50
-    )
-  ) {
-    // score = 0
-    newGame();
-  }
-
-  // if (collideRectCircle(pipePos, 0, 50, gapHeight, 200, birdY, 50)) {
-  //   newGame();
-  // }
-  // if (
-  //   collideRectCircle(
-  //     pipePos,
-  //     gapHeight + gapSize,
-  //     50,
-  //     height - (gapHeight + gapSize),
-  //     200,
-  //     birdY,
-  //     50
-  //   )
-  // ) {
-  //   newGame();
-  // }
+  background(220, 0, 80);
+  dot1.float();
+  dot1.display();
+  dot2.float();
+  dot2.display();
+  dot3.float();
+  dot3.display();
 }
 
-function keyPressed() {
-  fallSpeed = -10;
-}
 
-function newGame() {
-  birdY = 300;
-  fallSpeed = -5;
-  gravity = 0.3;
-  pipePos = width;
-  pipeSpeed = -4;
-  score = 0;
-  gapSize = 200;
-  gapHeight = random(height - gapSize);
+class BouncyDot {
+  constructor() {
+    // Randomly generate position
+    this.x = random(width);
+    this.y = random(height);
+    // Randomly generate radius
+    this.r = random(5, 12);
+    // Randomly generate color
+    this.color = random(360);
+    // Randomly generate a standard velocity (broken into components)...
+    this.standardXvelocity = random(0.5, 3);
+    this.standardYvelocity = random(0.5, 3);
+    // ...and use those as starting velocities.
+    this.xVelocity = this.standardXvelocity;
+    this.yVelocity = this.standardYvelocity;
+  }
+
+  float() {
+    this.x += this.xVelocity;
+    this.y += this.yVelocity;
+    // Standard bounce code - like the DVD logo, but for spheres.
+    if (this.x + this.r > width) {
+      this.xVelocity = -1 * this.standardXvelocity;
+    }
+    if (this.x - this.r < 0) {
+      this.xVelocity = this.standardXvelocity;
+    }
+    if (this.y + this.r > height) {
+      this.yVelocity = -1 * this.standardYvelocity;
+    }
+    if (this.y - this.r < 0) {
+      this.yVelocity = this.standardYvelocity;
+    }
+  }
+
+  display() {
+    fill(this.color, 80, 70);
+    noStroke();
+    ellipse(this.x, this.y, this.r * 2);
+  }
 }
