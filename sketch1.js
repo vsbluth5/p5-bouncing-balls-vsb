@@ -1,22 +1,22 @@
-let dots;
+let dot1, dot2, dot3;
 
 function setup() {
   createCanvas(windowWidth - 20, windowHeight - 20);
   colorMode(HSL, 360, 100, 100);
-  dots = []; // Start with an empty array
-  for (let i=0; i<50; i++) {
-    dots.push(new BouncyDot());
-  }
+  dot1 = new BouncyDot();
+  dot2 = new BouncyDot();
+  dot3 = new BouncyDot();
 }
 
 function draw() {
   background(220, 0, 80);
-  for (let i=0; i<dots.length; i++) {
-    dots[i].float();
-    dots[i].display();
-  }
+  dot1.float();
+  dot1.display();
+  dot2.float();
+  dot2.display();
+  dot3.float();
+  dot3.display();
 }
-
 
 
 class BouncyDot {
